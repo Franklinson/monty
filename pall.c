@@ -1,19 +1,16 @@
 #include "monty.h"
 
-
 /**
- * pall - Prints all the values on the stack
- * @stack: Pointer to the top of the stack
+ * pall - Prints all the values on the stack.
+ * @head: Pointer to the head of the stack.
  *
- * Return: None
+ * Return: Void.
  */
-void pall(stack_t **stack)
+void pall(StackNode *head)
 {
-	stack_t *current = *stack;
-
-	while (current != NULL)
+	while (head != NULL)
 	{
-		printf("%d\n", current->n);
-		current = current->next;
+		printf("%d\n", head->data);
+		head = head->next;
 	}
 }

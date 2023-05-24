@@ -36,7 +36,10 @@ typedef struct instruction_s
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-int main(int argc, char *argv[])
-void pall(stack_t **stack)
-void push(stack_t **stack, unsigned int line_number, int value)
+
+/* function prototypes */
+int main(int argc, char *argv[]);
+void pall(stack_t **stack);
+void push(stack_t **stack, unsigned int line_number, int value);
+void push(StackNode **head, char *strval, char *opcode, int line, FILE *str);
 #endif /* MONTY_H */

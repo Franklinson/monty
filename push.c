@@ -1,28 +1,41 @@
 #include "monty.h"
 
 /**
- * push - Pushes an element to the stack
- * @stack: Double pointer to the top of the stack
- * @line_number: Line number where the push opcode is encountered
- * @value: Value to be pushed to the stack
+ * push - Pushes an element onto the stack.
+ * @head: Pointer to the head of the stack.
+ * @strval: String representation of the integer value to be pushed.
+ * @opcode: Opcode name.
+ * @line: Line number in the Monty file.
+ * @str: File pointer to the Monty file.
  *
- * Return: None
+ * Return: Void.
  */
-void push(stack_t **stack, unsigned int line_number, int value)
+void push(StackNode **head, char *strval, char *opcode, int line, FILE *str)
 {
-	stack_t *new_node = malloc(sizeof(stack_t));
+	StackNode *newNode;
+	int n;
 
-	if (new_node == NULL)
+	if (strval == NULL)
+	{
+		fprintf(stderr, "L%d: usage: push integer\n", line);
+		exit(EXIT_FAILURE);
+	}
+
+	n = atoi(strval);
+	if ((strcmp(strval, "0") != 0) && n == 0)
+	{
+		fprintf(stderr, "L%d: usage: push integer\n", line);
+		exit(EXIT_FAILURE);
+	}
+
+	newNode = malloc(sizeof(StackNode));
+	if (newNode == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
 
-	new_node->n = value;
-	new_node->prev = NULL;
-	new_node->next = *stack;
-
-	if (*stack != NULL)
-		(*stack)->prev = new_node;
-	*stack = new_node;
+	newNode->data = n;
+	newNode->next = *head;
+	*head = newNode;
 }
