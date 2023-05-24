@@ -1,22 +1,49 @@
 #include "monty.h"
-
 /**
- * main - Entry point of the program
- * @argc: Number of command-line arguments
- * @argv: Array of command-line arguments
+ * main - Entry point of the program.
  *
- * Return: EXIT_SUCCESS if successful, EXIT_FAILURE otherwise
+ * Return: Always 0.
  */
-
-int main(int argc, char *argv[])
+int main(void)
 {
-	if (argc != 2)
+	StackNode *stack = NULL;
+	char instruction[100];
+	int line_number = 1;
+
+	while (fgets(instruction, sizeof(instruction), stdin))
 	{
-		fprintf(stderr, "USAGE: monty file\n");
-		return (EXIT_FAILURE);
+		instruction[strcspn(instruction, "\n")] = '\0';
+		char *opcode = strtok(instruction, " \t");
+		char *argument = strtok(NULL, " \t");
+
+	if (strcmp(opcode, "push") == 0)
+	{
+		push(&stack, argument, line_number);
+	}
+	else if (strcmp(opcode, "pall") == 0)
+	{
+		/*Implement the pall opcode here*/
+	}
+	else if (strcmp(opcode, "pint") == 0)
+	{
+		/*Implement the pint opcode here*/
+	}
+	else
+	{
+		fprintf(stderr, "L%d: unknown instruction %s\n", line_number, opcode);
+		exit(EXIT_FAILURE);
 	}
 
-	execute_monty_file(argv[1]);
+	line_number++;
+	}
+
+	while (stack != NULL)
+	{
+		StackNode *temp = stack;
+
+		stack = stack->next;
+		free(temp);
+	}
 
 	return (0);
 }
