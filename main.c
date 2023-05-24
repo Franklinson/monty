@@ -22,7 +22,7 @@ int main(void)
 	}
 	else if (strcmp(opcode, "pall") == 0)
 	{
-		/*Implement the pall opcode here*/
+		pall(stack);
 	}
 	else if (strcmp(opcode, "pint") == 0)
 	{
