@@ -2,65 +2,67 @@
 
 /**
  * main - Entry point for the Monty interpreter
- * @ac: Argument count
- * @av: Array of arguments
+ * @argc: Argument count
+ * @argv: Array of arguments
  *
  * Return: EXIT_SUCCESS or EXIT_FAILURE
  */
-int main(int ac, char **av)
+int main(int argc, char *argv[])
 {
-	FILE *f;
-	char *line = NULL, *opcode;
+	FILE *file;
+	char *line = NULL;
 	size_t len = 0;
-	unsigned int ln = 0;
-	stack_t *s = NULL;
-	instruction_t ops[] = {
-		{"push", push},
-		{"pall", pall},
-		{"pint", pint},
-		{NULL, NULL}
+	ssize_t read;
+	unsigned int line_number = 0;
+	stack_t *stack = NULL;
 	};
 
-	if (ac != 2)
+	if (argc != 2)
 	{
 		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
 
-	f = fopen(av[1], "r");
-	if (f == NULL)
+	file = fopen(argv[1], "r");
+	if (file == NULL)
 	{
-		fprintf(stderr, "Error: Can't open file %s\n", av[1]);
+		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
 
-	while (getline(&line, &len, f) != -1)
+	while ((read = getline(&line, &len, file)) != -1)
 	{
-		ln++;
-		opcode = strtok(line, " \t\n");
+		line_number++;
+		char *opcode = strtok(line, " \t\n");
+
 		if (opcode == NULL || opcode[0] == '#')
 			continue;
 
 		int i;
-		for (i = 0; ops[i].opcode != NULL; i++)
+		int found = 0;
+
+		for (i = 0; opcodes[i].opcode != NULL; i++)
 		{
-			if (strcmp(opcode, ops[i].opcode) == 0)
+			if (strcmp(opcode, opcodes[i].opcode) == 0)
 			{
-				ops[i].f(&s, ln);
+				opcodes[i].f(&stack, line_number);
+				found = 1;
 				break;
 			}
 		}
 
-		if (ops[i].opcode == NULL)
+		if (!found)
 		{
-			fprintf(stderr, "L%u: unknown instruction %s\n", ln, opcode);
+			fprintf(stderr, "L%u: unknown instruction %s\n", line_number, opcode);
 			free(line);
-			fclose(f);
+			fclose(file);
+			free_stack(stack);
 			exit(EXIT_FAILURE);
 		}
 	}
 
 	free(line);
-	fclose(f);
+	fclose(file);
+	free_stack(stack);
 	exit(EXIT_SUCCESS);
 }

@@ -1,9 +1,9 @@
 #include "monty.h"
 
 /**
- * pall - prints all the values on the stack
- * @stack: double pointer to the head of the stack
- * @line_number: current line number in the file
+ * pall - Prints all the values on the stack
+ * @stack: Pointer to the stack
+ * @line_number: Line number in the Monty file
  */
 void pall(stack_t **stack, unsigned int line_number)
 {
