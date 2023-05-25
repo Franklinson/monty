@@ -3,7 +3,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-
+#define _POSIX_C_SOURCE 200810L
+#include <string.h>
+#include "monty.h"
 /* Data structures */
 
 /**
@@ -38,8 +40,10 @@ typedef struct instruction_s
 
 /* Function prototypes */
 
-void push(stack_t **stack, unsigned int line_number);
 void pall(stack_t **stack, unsigned int line_number);
 int is_integer(char *str);
 void pint(stack_t **stack, unsigned int line_number);
+void free_stack(stack_t *stack);
+void (*get_instruction(char *opcode))(stack_t **, unsigned int);
+void push(stack_t **stack, int value);
 #endif /* MONTY_H */

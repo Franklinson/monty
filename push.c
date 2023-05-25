@@ -3,23 +3,26 @@
 /**
  * push - Pushes an element to the stack
  * @stack: Pointer to the stack
- * @line_number: Line number in the Monty file
+ * @value: Value to be pushed onto the stack
  */
-void push(stack_t **stack, unsigned int line_number)
+void push(stack_t **stack, int value)
 {
-	char *arg;
-	int num;
+    stack_t *new_node = malloc(sizeof(stack_t));
+    if (new_node == NULL)
+    {
+        fprintf(stderr, "Error: malloc failed\n");
+        free_stack(*stack);
+        exit(EXIT_FAILURE);
+    }
 
-	arg = strtok(NULL, " \t\n");
-	if (arg == NULL || !is_number(arg))
-	{
-		fprintf(stderr, "L%u: usage: push integer\n", line_number);
-		free_stack(*stack);
-		exit(EXIT_FAILURE);
-	}
+    new_node->n = value;
+    new_node->prev = NULL;
+    new_node->next = *stack;
 
-	num = atoi(arg);
-	add_node(stack, num);
+    if (*stack != NULL)
+        (*stack)->prev = new_node;
+
+    *stack = new_node;
 }
 
 /**
