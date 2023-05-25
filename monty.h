@@ -43,7 +43,7 @@ typedef struct instruction_s
 void pall(stack_t **stack, unsigned int line_number);
 int is_integer(char *str);
 void pint(stack_t **stack, unsigned int line_number);
-void free_stack(stack_t *stack);
+void free_stack(stack_t **stack);
 void (*get_instruction(char *opcode))(stack_t **, unsigned int);
 void push(stack_t **stack, int value);
 stack_t *add_node(stack_t **stack, int n);

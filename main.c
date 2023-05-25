@@ -1,7 +1,7 @@
 #define _POSIX_C_SOURCE 200810L
 #include "monty.h"
 
-stack_t *stack = NULL;
+
 /**
  * main - Entry point of the Monty interpreter
  * @argc: Number of command line arguments
@@ -11,6 +11,7 @@ stack_t *stack = NULL;
  */
 int main(int argc, char *argv[])
 {
+	stack_t *stack = NULL;
 	FILE *file;
 	char *line = NULL;
 	size_t len = 0;
