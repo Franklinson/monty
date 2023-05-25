@@ -1,7 +1,6 @@
 #define _POSIX_C_SOURCE 200810L
 #include "monty.h"
 
-
 /**
  * main - Entry point of the Monty interpreter
  * @argc: Number of command line arguments
@@ -47,7 +46,7 @@ int main(int argc, char *argv[])
 			if (value == NULL)
 			{
 				fprintf(stderr, "L%u: usage: push integer\n", line_number);
-				free_stack(stack);
+				free_stack(&stack);
 				free(line);
 				fclose(file);
 				exit(EXIT_FAILURE);
@@ -59,9 +58,9 @@ int main(int argc, char *argv[])
 			void (*instruction)(stack_t **, unsigned int) = get_instruction(opcode);
 
 			if (instruction == NULL)
-			{
+				{
 				fprintf(stderr, "L%u: unknown instruction %s\n", line_number, opcode);
-				free_stack(stack);
+				free_stack(&stack);
 				free(line);
 				fclose(file);
 				exit(EXIT_FAILURE);
@@ -69,7 +68,8 @@ int main(int argc, char *argv[])
 			instruction(&stack, line_number);
 		}
 	}
-	free_stack(stack);
+
+	free_stack(&stack);
 	free(line);
 	fclose(file);
 	exit(EXIT_SUCCESS);
