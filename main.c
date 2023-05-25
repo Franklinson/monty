@@ -1,49 +1,66 @@
 #include "monty.h"
+
 /**
- * main - Entry point of the program.
+ * main - Entry point for the Monty interpreter
+ * @ac: Argument count
+ * @av: Array of arguments
  *
- * Return: Always 0.
+ * Return: EXIT_SUCCESS or EXIT_FAILURE
  */
-int main(void)
+int main(int ac, char **av)
 {
-	StackNode *stack = NULL;
-	char instruction[100];
-	int line_number = 1;
+	FILE *f;
+	char *line = NULL, *opcode;
+	size_t len = 0;
+	unsigned int ln = 0;
+	stack_t *s = NULL;
+	instruction_t ops[] = {
+		{"push", push},
+		{"pall", pall},
+		{"pint", pint},
+		{NULL, NULL}
+	};
 
-	while (fgets(instruction, sizeof(instruction), stdin))
+	if (ac != 2)
 	{
-		instruction[strcspn(instruction, "\n")] = '\0';
-		char *opcode = strtok(instruction, " \t");
-		char *argument = strtok(NULL, " \t");
-
-	if (strcmp(opcode, "push") == 0)
-	{
-		push(&stack, argument, line_number);
-	}
-	else if (strcmp(opcode, "pall") == 0)
-	{
-		pall(stack);
-	}
-	else if (strcmp(opcode, "pint") == 0)
-	{
-		/*Implement the pint opcode here*/
-	}
-	else
-	{
-		fprintf(stderr, "L%d: unknown instruction %s\n", line_number, opcode);
+		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
 
-	line_number++;
-	}
-
-	while (stack != NULL)
+	f = fopen(av[1], "r");
+	if (f == NULL)
 	{
-		StackNode *temp = stack;
-
-		stack = stack->next;
-		free(temp);
+		fprintf(stderr, "Error: Can't open file %s\n", av[1]);
+		exit(EXIT_FAILURE);
 	}
 
-	return (0);
+	while (getline(&line, &len, f) != -1)
+	{
+		ln++;
+		opcode = strtok(line, " \t\n");
+		if (opcode == NULL || opcode[0] == '#')
+			continue;
+
+		int i;
+		for (i = 0; ops[i].opcode != NULL; i++)
+		{
+			if (strcmp(opcode, ops[i].opcode) == 0)
+			{
+				ops[i].f(&s, ln);
+				break;
+			}
+		}
+
+		if (ops[i].opcode == NULL)
+		{
+			fprintf(stderr, "L%u: unknown instruction %s\n", ln, opcode);
+			free(line);
+			fclose(f);
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	free(line);
+	fclose(f);
+	exit(EXIT_SUCCESS);
 }

@@ -1,19 +1,17 @@
 #include "monty.h"
 
 /**
- * pint - Prints the value at the top of the stack.
- * @head: Pointer to the head of the stack.
- * @line: Line number in the Monty file.
- *
- * Return: Void.
+ * pint - prints the value at the top of the stack
+ * @stack: double pointer to the head of the stack
+ * @line_number: current line number in the file
  */
-void pint(StackNode *head, int line)
+void pint(stack_t **stack, unsigned int line_number)
 {
-	if (head == NULL)
+	if (*stack == NULL)
 	{
-		fprintf(stderr, "L%d: can't pint, stack empty\n", line);
+		fprintf(stderr, "L%u: can't pint, stack empty\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 
-	printf("%d\n", head->data);
+	printf("%d\n", (*stack)->n);
 }
